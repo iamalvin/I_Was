@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:weightSum="20"
+    android:baselineAligned="false">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="19"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lastViewTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/last_view_title"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/sourceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/source_name" />
+
+        <TextView
+            android:id="@+id/lastViewTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/last_view_time" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <ImageView
+            android:contentDescription="@string/edit_source"
+            android:id="@+id/ivEdit"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            app:srcCompat="@drawable/ic_format_size_grey_500"/>
+        <ImageView
+            android:contentDescription="@string/delete_source"
+            android:id="@+id/ivDelete"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            app:srcCompat="@drawable/ic_highlight_off_grey_500" />
+    </LinearLayout>
+
+</LinearLayout>

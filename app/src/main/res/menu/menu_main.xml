@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ecmdapps.mengi.MainActivity">
+    <item
+        android:id="@+id/action_history"
+        android:orderInCategory="100"
+        android:title="@string/action_history"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_history_grey_500_48dp"/>
+</menu>

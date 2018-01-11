@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">I Was</string>
+    <string name="action_settings">Settings</string>
+    <string name="delete_source">delete source</string>
+    <string name="source_name">Source Name</string>
+    <string name="last_view_title">Title</string>
+    <string name="last_view_time">never</string>
+    <string name="edit_source">edit</string>
+    <string name="action_history">History</string>
+    <string name="action_next">Forward</string>
+    <string name="action_back">Back</string>
+</resources>
