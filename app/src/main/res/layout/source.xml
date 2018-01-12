@@ -7,11 +7,22 @@
     android:padding="10dp"
     android:weightSum="20"
     android:baselineAligned="false">
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <ImageView
+            android:contentDescription="@string/favicon"
+            android:id="@+id/ivFavicon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="19"
+        android:layout_weight="18"
         android:orientation="vertical">
 
         <TextView

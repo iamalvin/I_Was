@@ -2,6 +2,8 @@ package com.ecmdapps.mengi
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.format.DateUtils.*
@@ -11,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private var sourcesList = ArrayList<Source>()
@@ -61,7 +64,10 @@ class MainActivity : AppCompatActivity() {
 
             vh.lastViewTitle.text = if (mSource.lastViewTitle != null) mSource.lastViewTitle else mSource.sourceName
             vh.sourceName.text = mSource.sourceName
+            mSource.sourceImage?.size
             vh.lastViewTime.text = if (mSource.lastViewTime != 0L) getRelativeDateTimeString(context, mSource.lastViewTime!!, SECOND_IN_MILLIS, WEEK_IN_MILLIS, FORMAT_ABBREV_ALL) else "never viewed"
+            val img : Bitmap = BitmapFactory.decodeByteArray(mSource.sourceImage!!, 0, mSource.sourceImage?.size!!)
+            vh.ivFavicon.setImageBitmap(Bitmap.createScaledBitmap(img, img.width, img.height, false))
 
             vh.lastViewTitle.setOnClickListener {
                 loadInWebView(mSource)
@@ -131,7 +137,15 @@ class MainActivity : AppCompatActivity() {
 
             } while (cursor.moveToNext())
             cursor.close()
+            dbManager.close()
+        } else {
+            val name = "Google Search"
+            val url = "http://google.com"
+            val history = History(this)
+            history.store(url, 0L, UUID.nameUUIDFromBytes(url.toByteArray()).toString(), null, name)
+            loadQueryAll()
         }
+
         val slv = findViewById<ListView>(R.id.sourceList)
         slv.adapter = SourceListAdapter(this, sourcesList)
     }
@@ -150,13 +164,15 @@ class MainActivity : AppCompatActivity() {
         val lastViewTime: TextView
         val ivEdit: ImageView
         val ivDelete: ImageView
+        val ivFavicon: ImageView
 
         init {
-            this.sourceName = view?.findViewById<TextView>(R.id.sourceName) as TextView
-            this.lastViewTitle = view.findViewById<TextView>(R.id.lastViewTitle) as TextView
-            this.lastViewTime = view.findViewById<TextView>(R.id.lastViewTime) as TextView
-            this.ivEdit = view.findViewById<ImageView>(R.id.ivEdit) as ImageView
-            this.ivDelete = view.findViewById<ImageView>(R.id.ivDelete) as ImageView
+            this.sourceName = view?.findViewById(R.id.sourceName) as TextView
+            this.lastViewTitle = view.findViewById<TextView>(R.id.lastViewTitle)
+            this.lastViewTime = view.findViewById<TextView>(R.id.lastViewTime)
+            this.ivEdit = view.findViewById<ImageView>(R.id.ivEdit)
+            this.ivDelete = view.findViewById<ImageView>(R.id.ivDelete)
+            this.ivFavicon = view.findViewById(R.id.ivFavicon) as ImageView
         }
     }
 }

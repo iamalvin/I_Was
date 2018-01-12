@@ -34,12 +34,14 @@ class SourceActivity : AppCompatActivity(){
             values.put(SourceDbManager.colSourceName, sourceNameET.text.toString())
             values.put(SourceDbManager.colSourceLink, sourceLinkET.text.toString())
             values.put(SourceDbManager.colLastViewLink, sourceLinkET.text.toString())
+            values.put(SourceDbManager.colLastViewTime, System.currentTimeMillis())
 
             if (id == 0L ){
                 val mID = dbManager.insert(values)
 
                 if (mID > 0) {
                     Toast.makeText(this, "Added source successfully!", Toast.LENGTH_LONG).show()
+                    dbManager.close()
                     finish()
                 } else {
                     Toast.makeText(this, "Failed to add source!", Toast.LENGTH_LONG).show()
@@ -50,6 +52,7 @@ class SourceActivity : AppCompatActivity(){
 
                 if (mID > 0) {
                     Toast.makeText(this, "updated source successfully!", Toast.LENGTH_LONG).show()
+                    dbManager.close()
                     finish()
                 } else {
                     Toast.makeText(this, "Failed to update source!", Toast.LENGTH_LONG).show()

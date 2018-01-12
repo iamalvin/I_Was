@@ -20,7 +20,7 @@ class SourceDbManager(context: Context) {
         val colLastViewId = "LastViewId"
         val colLastViewLink = "LastViewLink"
         val colLastViewTime = "LastViewTime"
-        private val dbVersion = 5
+        private val dbVersion = 9
         private val CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + colId + " INTEGER PRIMARY KEY," + colSourceName + " TEXT, " + colSourceLink + " TEXT, " + colLastViewId + " TEXT, " + colLastViewLink + " TEXT, " + colLastViewTitle + " TEXT, " + colSourceImage + " BLOB, " + colLastViewTime + " INTEGER);"
 
     }
@@ -74,24 +74,19 @@ class SourceDbManager(context: Context) {
         return count
     }
 
+    fun close() {
+        db?.close()
+    }
+
     inner class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
-        var defaultValues = ContentValues()
-        fun populateDefaultValues (){
-            defaultValues.put(colSourceName, "Google")
-            defaultValues.put(colSourceLink, "http://google.com")
-            defaultValues.put(colLastViewLink, "http://google.com")
-        }
+
         override fun onCreate(db: SQLiteDatabase?) {
-            populateDefaultValues()
             db!!.execSQL(CREATE_TABLE_SQL)
-            insert(defaultValues)
         }
 
         override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-            populateDefaultValues()
             db!!.execSQL("Drop table IF EXISTS " + dbTable)
             db.execSQL(CREATE_TABLE_SQL)
-            insert(defaultValues)
         }
     }
 

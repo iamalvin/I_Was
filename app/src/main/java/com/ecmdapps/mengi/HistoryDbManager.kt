@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class HistoryDbManager(context: Context) {
     companion object {
@@ -17,10 +18,10 @@ class HistoryDbManager(context: Context) {
         val colLastViewId = SourceDbManager.colLastViewId
         val colLastViewLink = SourceDbManager.colLastViewLink
         val colLastViewTime = SourceDbManager.colLastViewTime
-        private val dbVersion = 2
+        private val dbVersion = 5
 
 
-        private val CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + colId + " INTEGER PRIMARY KEY," + colLastViewId + " TEXT UNIQUE, " + colLastViewLink + " TEXT, " + colLastViewTitle + " TEXT, " + colSourceImage + " BLOB, " + colSourceId + " INTEGER, " + colLastViewTime + " INTEGER);"
+        private val CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS $dbTable ($colId INTEGER PRIMARY KEY,$colLastViewId TEXT UNIQUE, $colLastViewLink TEXT, $colLastViewTitle TEXT, $colSourceImage BLOB, $colSourceId INTEGER, $colLastViewTime INTEGER);"
     }
 
     private var db: SQLiteDatabase? = null
@@ -30,11 +31,12 @@ class HistoryDbManager(context: Context) {
     }
 
     fun queryAll(): Cursor {
-        return db!!.rawQuery("select * from " + dbTable  + " ORDER BY "+ colLastViewTime + " DESC", null)
+        return db!!.rawQuery("select * from $dbTable ORDER BY $colLastViewTime DESC", null)
     }
 
     fun queryPerSourceId(sourceId: Long) : Cursor {
-        return db!!.rawQuery("select * from " + dbTable  + " where " + colSourceId + " = ? "  + " ORDER BY "+ colLastViewTime + " DESC", arrayOf(sourceId.toString()))
+        Log.d("sourceIdQuery", "Querying Id" + sourceId.toString())
+        return db!!.rawQuery("select * from $dbTable WHERE $colSourceId = ?  ORDER BY $colLastViewTime DESC", arrayOf(sourceId.toString()))
     }
 
     fun delete(selection: String, selectionArgs: Array<String>): Int {
@@ -64,6 +66,10 @@ class HistoryDbManager(context: Context) {
 
     fun update(values: ContentValues, selection: String, selectionargs: Array<String>): Int {
         return db!!.update(dbTable, values, selection, selectionargs)
+    }
+
+    fun close() {
+        db?.close()
     }
 
     inner class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
