@@ -1,5 +1,6 @@
 package com.ecmdapps.mengi
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -141,8 +143,19 @@ class MainActivity : AppCompatActivity() {
         } else {
             val name = "Google Search"
             val url = "http://google.com"
-            val history = History(this)
-            history.store(url, 0L, UUID.nameUUIDFromBytes(url.toByteArray()).toString(), null, name)
+            val fav = BitmapFactory.decodeResource(this.resources, R.drawable.default_favicon)
+            val stream = ByteArrayOutputStream()
+            fav.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            val fByteArray = stream.toByteArray()
+
+            val values = ContentValues()
+            values.put(SourceDbManager.colSourceName, name)
+            values.put(SourceDbManager.colSourceLink, url)
+            values.put(SourceDbManager.colLastViewLink, url)
+            values.put(SourceDbManager.colLastViewTime, System.currentTimeMillis())
+            values.put(SourceDbManager.colSourceImage, fByteArray)
+            dbManager.insert(values)
+            dbManager.close()
             loadQueryAll()
         }
 
