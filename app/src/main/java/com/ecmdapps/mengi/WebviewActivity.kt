@@ -23,6 +23,7 @@ class WebviewActivity : AppCompatActivity(){
     companion object {
         var pageID: String = ""
         var lastViewLink = "http://topwebfiction.com"
+        var lastViewTitle = ""
         var lastViewFavicon : Bitmap? = null
         var sourceId = 0L
     }
@@ -53,7 +54,7 @@ class WebviewActivity : AppCompatActivity(){
         webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         webView.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
         webView.webViewClient = AWebViewClient(this)
-        webView.webChromeClient = AWebChromeClient()
+        webView.webChromeClient = AWebChromeClient(this)
 
         val cookieManager = CookieManager.getInstance()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -103,10 +104,16 @@ class WebviewActivity : AppCompatActivity(){
         }
     }
 
-    class AWebChromeClient : WebChromeClient(){
+    class AWebChromeClient(ctxt : Context) : WebChromeClient (){
+        private val context : Context = ctxt
         override fun onReceivedIcon(view: WebView, icon: Bitmap) {
             super.onReceivedIcon(view, icon)
+            val history = History(context)
             lastViewFavicon = icon
+            lastViewLink = view.url ?: lastViewLink
+            lastViewTitle = view.title ?: lastViewTitle
+            pageID = UUID.nameUUIDFromBytes(lastViewLink.toByteArray()).toString()
+            sourceId = history.store(lastViewLink, sourceId, pageID, lastViewFavicon, lastViewTitle)
         }
     }
 
@@ -120,8 +127,9 @@ class WebviewActivity : AppCompatActivity(){
             val swipeLayout: SwipeRefreshLayout = a.findViewById(R.id.swipe)
             swipeLayout.isRefreshing = false
             lastViewLink = url ?: lastViewLink
+            lastViewTitle = view?.title ?: lastViewTitle
             pageID = UUID.nameUUIDFromBytes(lastViewLink.toByteArray()).toString()
-            sourceId = history.store(lastViewLink, sourceId, pageID, lastViewFavicon, view?.title)
+            sourceId = history.store(lastViewLink, sourceId, pageID, lastViewFavicon, lastViewTitle)
         }
 
         @Suppress("OverridingDeprecatedMember", "DEPRECATION")

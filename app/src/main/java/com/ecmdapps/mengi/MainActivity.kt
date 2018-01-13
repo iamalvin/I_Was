@@ -141,26 +141,31 @@ class MainActivity : AppCompatActivity() {
             cursor.close()
             dbManager.close()
         } else {
-            val name = "Google Search"
-            val url = "http://google.com"
-            val fav = BitmapFactory.decodeResource(this.resources, R.drawable.default_favicon)
-            val stream = ByteArrayOutputStream()
-            fav.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val fByteArray = stream.toByteArray()
+            addEntry(dbManager, "Google Search", "http://google.com")
+            addEntry(dbManager, "Top web Fiction", "http://topwebfiction.com")
+            addEntry(dbManager, "xkcd", "http://xkcd.com")
 
-            val values = ContentValues()
-            values.put(SourceDbManager.colSourceName, name)
-            values.put(SourceDbManager.colSourceLink, url)
-            values.put(SourceDbManager.colLastViewLink, url)
-            values.put(SourceDbManager.colLastViewTime, System.currentTimeMillis())
-            values.put(SourceDbManager.colSourceImage, fByteArray)
-            dbManager.insert(values)
             dbManager.close()
             loadQueryAll()
         }
 
         val slv = findViewById<ListView>(R.id.sourceList)
         slv.adapter = SourceListAdapter(this, sourcesList)
+    }
+
+    private fun addEntry(dbManager: SourceDbManager, name: String, url: String) {
+        val fav = BitmapFactory.decodeResource(this.resources, R.drawable.default_favicon)
+        val stream = ByteArrayOutputStream()
+        fav.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        val fByteArray = stream.toByteArray()
+
+        val values = ContentValues()
+        values.put(SourceDbManager.colSourceName, name)
+        values.put(SourceDbManager.colSourceLink, url)
+        values.put(SourceDbManager.colLastViewLink, url)
+        values.put(SourceDbManager.colLastViewTime, System.currentTimeMillis())
+        values.put(SourceDbManager.colSourceImage, fByteArray)
+        dbManager.insert(values)
     }
 
     private fun updateSource(source: Source) {
