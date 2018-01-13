@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 
-
 class ShowHistoryActivity: AppCompatActivity() {
     private var historyList = ArrayList<Source>()
     companion object {
@@ -24,7 +23,6 @@ class ShowHistoryActivity: AppCompatActivity() {
         setContentView(R.layout.activity_showhistory)
         try {
             sourceId = intent.getLongExtra(SourceDbManager.colId, 0L)
-            Log.d("showHistoryId", sourceId.toString())
             if ( sourceId == 0L ) {
                 loadQueryAll()
             } else {
@@ -32,7 +30,6 @@ class ShowHistoryActivity: AppCompatActivity() {
                 loadQueryPerId(sid)
             }
         } catch (ex: Exception) {
-            Log.d("showHistoryId", "no id is found")
             ex.printStackTrace()
         }
 
@@ -85,7 +82,6 @@ class ShowHistoryActivity: AppCompatActivity() {
                 val dbManager = HistoryDbManager(this.context!!)
                 val selectionArgs = arrayOf(mSource.id.toString())
                 dbManager.delete("Id=?", selectionArgs)
-                Log.d("showHistoryId", sourceId.toString())
                 if ( sourceId == 0L ) {
                     loadQueryAll()
                 } else {
@@ -102,16 +98,15 @@ class ShowHistoryActivity: AppCompatActivity() {
 
     private fun loadInWebView(source: Source) {
         val intent = Intent(this, WebviewActivity::class.java)
-        intent.putExtra(SourceDbManager.colId, source.id)
+        val sid:Long = sourceId ?: 0L
+        intent.putExtra(SourceDbManager.colId, sid)
         intent.putExtra(SourceDbManager.colLastViewTitle, source.lastViewTitle)
         intent.putExtra(SourceDbManager.colLastViewLink, source.lastViewLink)
-
         startActivity(intent)
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("showHistoryId", sourceId.toString())
         if ( sourceId == 0L ) {
             loadQueryAll()
         } else {
@@ -122,7 +117,6 @@ class ShowHistoryActivity: AppCompatActivity() {
 
     private fun loadQueryPerId(sourceId: Long) {
         val dbManager = HistoryDbManager(this)
-        Log.d("loadingQueryPerId", "given id would be " + sourceId )
         val cursor = dbManager.queryPerSourceId(sourceId)
 
         historyList.clear()
@@ -174,20 +168,11 @@ class ShowHistoryActivity: AppCompatActivity() {
     }
 
     private class ViewHolder(view: View?) {
-        val sourceName: TextView
-        val lastViewTitle: TextView
-        val lastViewTime: TextView
-        val ivEdit: ImageView
-        val ivDelete: ImageView
-        val ivFavicon: ImageView
-
-        init {
-            this.sourceName = view?.findViewById(R.id.sourceName) as TextView
-            this.lastViewTitle = view.findViewById(R.id.lastViewTitle) as TextView
-            this.lastViewTime = view.findViewById(R.id.lastViewTime) as TextView
-            this.ivEdit = view.findViewById(R.id.ivEdit) as ImageView
-            this.ivDelete = view.findViewById(R.id.ivDelete) as ImageView
-            this.ivFavicon = view.findViewById(R.id.ivFavicon) as ImageView
-        }
+        val ivEdit: ImageView = view?.findViewById(R.id.ivEdit) as ImageView
+        val ivDelete: ImageView = view?.findViewById(R.id.ivDelete) as ImageView
+        val ivFavicon: ImageView = view?.findViewById(R.id.ivFavicon) as ImageView
+        val sourceName: TextView = view?.findViewById(R.id.sourceName) as TextView
+        val lastViewTime: TextView = view?.findViewById(R.id.lastViewTime) as TextView
+        val lastViewTitle: TextView = view?.findViewById(R.id.lastViewTitle) as TextView
     }
 }
