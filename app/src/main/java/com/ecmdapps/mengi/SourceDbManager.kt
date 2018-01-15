@@ -20,7 +20,8 @@ class SourceDbManager(context: Context) {
         val colLastViewId = "LastViewId"
         val colLastViewLink = "LastViewLink"
         val colLastViewTime = "LastViewTime"
-        private val dbVersion = 9
+
+        private val dbVersion = 10
         private val CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + colId + " INTEGER PRIMARY KEY," + colSourceName + " TEXT, " + colSourceLink + " TEXT, " + colLastViewId + " TEXT, " + colLastViewLink + " TEXT, " + colLastViewTitle + " TEXT, " + colSourceImage + " BLOB, " + colLastViewTime + " INTEGER);"
 
     }
@@ -46,11 +47,12 @@ class SourceDbManager(context: Context) {
 
     fun add(values: ContentValues) : Long {
         val id = values.get(colId) as Long
+        val lastViewHost= URL(values.get(colLastViewLink).toString()).host
+
         val cursor = find(id)
         if (cursor.count > 0) {
             cursor.moveToFirst()
             val sourceHost = URL(cursor.getString(cursor.getColumnIndex(colSourceLink))).host
-            val lastViewHost= URL(values.get(colLastViewLink).toString()).host
             val sourceTPD = InternetDomainName.from(sourceHost).topPrivateDomain().toString()
             val lastViewTPD = InternetDomainName.from(lastViewHost).topPrivateDomain().toString()
             cursor.close()
@@ -59,13 +61,16 @@ class SourceDbManager(context: Context) {
                 update(values, colId + " = ? ", arrayOf(id.toString()))
                 return id.toString().toLong()
             } else {
-                values.put(colSourceName, lastViewTPD)
+                values.put(colSourceName, lastViewHost)
                 values.put(colSourceLink, values.get(colLastViewLink).toString())
                 values.remove(colId)
                 return insert(values)
             }
         } else {
-            return 0L
+            values.put(colSourceName, lastViewHost)
+            values.put(colSourceLink, values.get(colLastViewLink).toString())
+            values.remove(colId)
+            return insert(values)
         }
     }
 

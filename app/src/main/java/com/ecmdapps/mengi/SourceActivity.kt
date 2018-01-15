@@ -1,11 +1,14 @@
 package com.ecmdapps.mengi
 
 import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import java.io.ByteArrayOutputStream
 
 
 class SourceActivity : AppCompatActivity(){
@@ -29,12 +32,17 @@ class SourceActivity : AppCompatActivity(){
 
         btAdd.setOnClickListener{
             val dbManager = SourceDbManager(this)
+            val fav = BitmapFactory.decodeResource(this.resources, R.drawable.default_favicon)
+            val stream = ByteArrayOutputStream()
+            fav.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            val fByteArray = stream.toByteArray()
 
             val values = ContentValues()
             values.put(SourceDbManager.colSourceName, sourceNameET.text.toString())
             values.put(SourceDbManager.colSourceLink, sourceLinkET.text.toString())
             values.put(SourceDbManager.colLastViewLink, sourceLinkET.text.toString())
             values.put(SourceDbManager.colLastViewTime, System.currentTimeMillis())
+            values.put(SourceDbManager.colSourceImage, fByteArray)
 
             if (id == 0L ){
                 val mID = dbManager.insert(values)
