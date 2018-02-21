@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -14,7 +15,6 @@ import android.view.*
 import android.webkit.*
 import kotlinx.android.synthetic.main.activity_webview.*
 import java.util.*
-import android.webkit.WebView
 
 class WebviewActivity : AppCompatActivity(){
     private lateinit var webView : AutoHidingWebView
@@ -102,9 +102,15 @@ class WebviewActivity : AppCompatActivity(){
         val history = History(this)
         return when (item.itemId) {
             R.id.action_history -> history.showWithId(sourceId)
-            R.id.action_home -> { finish(); true }
+            R.id.action_home -> { loadMainActivity(); true }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun loadMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     class AWebChromeClient(ctxt : Context) : WebChromeClient (){
