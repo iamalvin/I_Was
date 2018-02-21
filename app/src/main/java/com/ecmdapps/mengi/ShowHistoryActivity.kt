@@ -78,6 +78,10 @@ class ShowHistoryActivity: AppCompatActivity() {
                 loadInWebView(mSource)
             }
 
+            vh.ivFavicon.setOnClickListener {
+                loadSourceInWebView(mSource)
+            }
+
             vh.ivDelete.setOnClickListener {
                 val dbManager = HistoryDbManager(this.context!!)
                 val selectionArgs = arrayOf(mSource.id.toString())
@@ -102,6 +106,15 @@ class ShowHistoryActivity: AppCompatActivity() {
         intent.putExtra(SourceDbManager.colId, sid)
         intent.putExtra(SourceDbManager.colLastViewTitle, source.lastViewTitle)
         intent.putExtra(SourceDbManager.colLastViewLink, source.lastViewLink)
+        startActivity(intent)
+    }
+
+    private fun loadSourceInWebView(source: Source) {
+        val intent = Intent(this, WebviewActivity::class.java)
+        val sid:Long = sourceId ?: 0L
+        intent.putExtra(SourceDbManager.colId, sid)
+        intent.putExtra(SourceDbManager.colLastViewTitle, source.lastViewTitle)
+        intent.putExtra(SourceDbManager.colLastViewLink, source.sourceLink)
         startActivity(intent)
     }
 

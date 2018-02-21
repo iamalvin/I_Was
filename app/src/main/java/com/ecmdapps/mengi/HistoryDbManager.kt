@@ -26,7 +26,7 @@ class HistoryDbManager(context: Context) {
 
     private var db: SQLiteDatabase? = null
 
-    fun insert(values: ContentValues): Long {
+    private fun insert(values: ContentValues): Long {
         return db!!.insert(dbTable, "", values)
     }
 
@@ -35,17 +35,16 @@ class HistoryDbManager(context: Context) {
     }
 
     fun queryPerSourceId(sourceId: Long) : Cursor {
-        Log.d("sourceIdQuery", "Querying Id" + sourceId.toString())
+        Log.d("sourceIdQuery", "Querying Id $sourceId")
         return db!!.rawQuery("select * from $dbTable WHERE $colSourceId = ?  ORDER BY $colLastViewTime DESC", arrayOf(sourceId.toString()))
     }
 
     fun delete(selection: String, selectionArgs: Array<String>): Int {
-        val count = db!!.delete(dbTable, selection, selectionArgs)
-        return count
+        return db!!.delete(dbTable, selection, selectionArgs)
     }
 
-    fun find(LastViewId: String) : Cursor {
-        return db!!.rawQuery("select * from " + dbTable + " where " + colLastViewId + " = ? " + " ORDER BY "+ colLastViewTime + " DESC", arrayOf(LastViewId))
+    private fun find(LastViewId: String) : Cursor {
+        return db!!.rawQuery("select * from $dbTable where $colLastViewId = ?  ORDER BY $colLastViewTime DESC", arrayOf(LastViewId))
     }
 
     fun add(values: ContentValues) {
@@ -58,13 +57,13 @@ class HistoryDbManager(context: Context) {
         if (cursor.count > 0) {
             cursor.moveToFirst()
             cursor.close()
-            update(values, colLastViewId + " = ? ", arrayOf(lid.toString()))
+            update(values, "$colLastViewId = ? ", arrayOf(lid.toString()))
         } else {
             insert(values)
         }
     }
 
-    fun update(values: ContentValues, selection: String, selectionargs: Array<String>): Int {
+    private fun update(values: ContentValues, selection: String, selectionargs: Array<String>): Int {
         return db!!.update(dbTable, values, selection, selectionargs)
     }
 
@@ -79,7 +78,7 @@ class HistoryDbManager(context: Context) {
         }
 
         override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-            db!!.execSQL("Drop table IF EXISTS " + dbTable)
+            db!!.execSQL("Drop table IF EXISTS $dbTable")
             db.execSQL(CREATE_TABLE_SQL)
         }
     }

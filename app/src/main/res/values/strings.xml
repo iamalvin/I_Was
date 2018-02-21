@@ -10,4 +10,5 @@
     <string name="action_next">Forward</string>
     <string name="action_back">Back</string>
     <string name="favicon">favicon</string>
+    <string name="action_home">Home</string>
 </resources>

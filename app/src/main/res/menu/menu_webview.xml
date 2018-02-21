@@ -12,4 +12,11 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_history_grey_500_48dp"/>
 
+    <item
+        android:id="@+id/action_home"
+        android:orderInCategory="99"
+        android:title="@string/action_home"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_home_grey_500_48dp"/>
+
 </menu>

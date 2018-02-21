@@ -42,6 +42,7 @@ class WebviewActivity : AppCompatActivity(){
         }
 
         swipeLayout = findViewById(R.id.swipe)
+        swipeLayout.setPadding(0,100,0,0)
         swipeLayout.setOnRefreshListener {
             webView.loadUrl(lastViewLink)
         }
@@ -50,8 +51,7 @@ class WebviewActivity : AppCompatActivity(){
         webView.setGD(GestureDetector(this, ScrollDetectorListener(this)))
         webView.settings.javaScriptEnabled = true
         webView.settings.loadsImagesAutomatically = true
-        webView.settings.setAppCacheEnabled(true)
-        webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+        webView.settings.setAppCacheEnabled(false)
         webView.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
         webView.webViewClient = AWebViewClient(this)
         webView.webChromeClient = AWebChromeClient(this)
@@ -76,10 +76,12 @@ class WebviewActivity : AppCompatActivity(){
                     if (e1.y - e2.y > 20) {
                         wa.supportActionBar?.hide()
                         wa.findViewById<AutoHidingWebView>(R.id.webview).invalidate()
+                        wa.findViewById<SwipeRefreshLayout>(R.id.swipe).setPadding(0,0,0,0)
                         return false
                     } else if (e2.y - e1.y > 20 ){
                         wa.supportActionBar?.show()
                         wa.findViewById<AutoHidingWebView>(R.id.webview).invalidate()
+                        wa.findViewById<SwipeRefreshLayout>(R.id.swipe).setPadding(0,100,0,0)
                         return false
                     }
                 } catch (ex: Exception) {
@@ -100,6 +102,7 @@ class WebviewActivity : AppCompatActivity(){
         val history = History(this)
         return when (item.itemId) {
             R.id.action_history -> history.showWithId(sourceId)
+            R.id.action_home -> { finish(); true }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -130,6 +133,7 @@ class WebviewActivity : AppCompatActivity(){
             lastViewTitle = view?.title ?: lastViewTitle
             pageID = UUID.nameUUIDFromBytes(lastViewLink.toByteArray()).toString()
             sourceId = history.store(lastViewLink, sourceId, pageID, lastViewFavicon, lastViewTitle)
+            (context as Activity).title = lastViewTitle
         }
 
         @Suppress("OverridingDeprecatedMember", "DEPRECATION")

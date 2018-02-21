@@ -78,6 +78,10 @@ class MainActivity : AppCompatActivity() {
                 updateSource(mSource)
             }
 
+            vh.ivFavicon.setOnClickListener {
+                loadSourceInWebView(mSource)
+            }
+
             vh.ivDelete.setOnClickListener {
                 val dbManager = SourceDbManager(this.context!!)
                 val selectionArgs = arrayOf(mSource.id.toString())
@@ -96,6 +100,16 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(SourceDbManager.colLastViewTitle, source.lastViewTitle)
         intent.putExtra(SourceDbManager.colLastViewLink, source.lastViewLink)
 
+        startActivity(intent)
+    }
+
+    private fun loadSourceInWebView(source: Source) {
+        val intent = Intent(this, WebviewActivity::class.java)
+        intent.putExtra(SourceDbManager.colId, source.id)
+        intent.putExtra(SourceDbManager.colSourceName, source.sourceName)
+        intent.putExtra(SourceDbManager.colSourceLink, source.sourceLink)
+        intent.putExtra(SourceDbManager.colLastViewTitle, source.lastViewTitle)
+        intent.putExtra(SourceDbManager.colLastViewLink, source.sourceLink)
         startActivity(intent)
     }
 
