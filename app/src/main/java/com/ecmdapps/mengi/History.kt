@@ -8,13 +8,13 @@ import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
 
 class History(val context: Context) {
-    fun show():Boolean{
+    fun show() : Boolean {
         val intent = Intent(context, ShowHistoryActivity::class.java)
         context.startActivity(intent)
         return true
     }
 
-    fun showWithId(Id:Long):Boolean {
+    fun showWithId(Id:Long) : Boolean {
         val intent = Intent(context, ShowHistoryActivity::class.java)
         intent.putExtra(SourceDbManager.colId, Id)
         context.startActivity(intent)

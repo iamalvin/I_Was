@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_webview.*
 import java.util.*
 
 class WebviewActivity : AppCompatActivity(){
+
     private lateinit var webView : AutoHidingWebView
     private lateinit var swipeLayout: SwipeRefreshLayout
 
@@ -156,5 +157,10 @@ class WebviewActivity : AppCompatActivity(){
         override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
             super.onReceivedHttpError(view, request, errorResponse)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        History(this).show()
     }
 }
