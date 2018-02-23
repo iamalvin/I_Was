@@ -160,7 +160,6 @@ class WebviewActivity : AppCompatActivity(){
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         History(this).show()
     }
 }
